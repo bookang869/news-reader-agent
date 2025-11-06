@@ -5,8 +5,8 @@ dotenv.load_dotenv()
 # Crew - a collaborative group of agents
 # Agent - an autonomous unit that performs tasks, makes decisions, accomplish objectives, etc... using AI
 # Task - a specific assignment completed by an Agent
-from crewai import Crew, Agent, Task, crew
-from crewai.project import CrewBase, agent, task
+from crewai import Crew, Agent, Task
+from crewai.project import CrewBase, agent, task, crew
 
 
 # Decorator 'CrewBase' allows CrewAI-specific decorators on methods: @agent, @task, @after_kickoff
