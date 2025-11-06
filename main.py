@@ -20,7 +20,6 @@ class TranslatorCrew:
         # -> Goal: individual objective that guides the agent's decision making
         # -> Backstory: context and personality to the agent to enrich interactions
         return Agent(
-            role="Translator to translate from English to Italian",
-            goal="To be a good and useful translator to avoid misunderstandings.",
-            backstory="You grew up between New York and Palermo, you can speak both English and Italian fluently, and you can detect cultural differences.",
+            # assigns attributes according to 'translator_agent' in config/agents.yaml
+            config=self.agents_config["translator_agent"]
         )
