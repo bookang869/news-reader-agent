@@ -16,10 +16,18 @@ class TranslatorCrew:
     @agent
     def translator_agent(self):
         # 3 mandatory attributes
-        # -> Role: agent's function and expertise within the crew
-        # -> Goal: individual objective that guides the agent's decision making
+        # -> Role: an agent's function and expertise within the crew
+        # -> Goal: an individual objective that guides the agent's decision making
         # -> Backstory: context and personality to the agent to enrich interactions
         return Agent(
             # assigns attributes according to 'translator_agent' in config/agents.yaml
             config=self.agents_config["translator_agent"]
         )
+
+    @task
+    def translate_task(self):
+        # 2 mandatory attributes
+        # -> Description: a clear, concise statement of what the task entails
+        # -> Expected Output: a detailed description of what the task's completion look like
+        # -> Agent (OPTIONAL): the agent responsible for executing the task
+        return Task(config=self.tasks_config["translate_task"])
