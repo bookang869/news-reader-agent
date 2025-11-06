@@ -5,7 +5,7 @@ dotenv.load_dotenv()
 # Crew - a collaborative group of agents
 # Agent - an autonomous unit that performs tasks, makes decisions, accomplish objectives, etc... using AI
 # Task - a specific assignment completed by an Agent
-from crewai import Crew, Agent, Task
+from crewai import Crew, Agent, Task, crew
 from crewai.project import CrewBase, agent, task
 
 
@@ -13,6 +13,7 @@ from crewai.project import CrewBase, agent, task
 @CrewBase
 class TranslatorCrew:
     # 1. Create an Agent
+    # anything with @agent decorator goes to self.agents
     @agent
     def translator_agent(self):
         # 3 mandatory attributes
@@ -24,6 +25,8 @@ class TranslatorCrew:
             config=self.agents_config["translator_agent"]
         )
 
+    # 2. Create a Task
+    # anything with @task decorator goes to self.tasks
     @task
     def translate_task(self):
         # 2 mandatory attributes
@@ -31,3 +34,15 @@ class TranslatorCrew:
         # -> Expected Output: a detailed description of what the task's completion look like
         # -> Agent (OPTIONAL): the agent responsible for executing the task
         return Task(config=self.tasks_config["translate_task"])
+
+    # 3. Create a Crew
+    @crew
+    def assemble_crew(self):
+        # Crew is a combination of agents and tasks
+        # verbose - print out agent's response
+        return Crew(agents=self.agents, tasks=self.tasks, verbose=True)
+
+
+TranslatorCrew().assemble_crew().kickoff(
+    inputs={"sentence": "I'm Kyle and I like to ride my bicycle in Napoli"}
+)
