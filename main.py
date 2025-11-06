@@ -35,6 +35,10 @@ class TranslatorCrew:
         # -> Agent (OPTIONAL): the agent responsible for executing the task
         return Task(config=self.tasks_config["translate_task"])
 
+    @task
+    def retranslate_task(self):
+        return Task(config=self.tasks_config["retranslate_task"])
+
     # 3. Create a Crew
     @crew
     def assemble_crew(self):
