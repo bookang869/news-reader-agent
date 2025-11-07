@@ -7,6 +7,7 @@ dotenv.load_dotenv()
 # Task - a specific assignment completed by an Agent
 from crewai import Crew, Agent, Task
 from crewai.project import CrewBase, agent, task, crew
+from tools import count_letters
 
 
 # Decorator 'CrewBase' allows CrewAI-specific decorators on methods: @agent, @task, @after_kickoff
@@ -27,7 +28,8 @@ class TranslatorCrew:
 
     @agent
     def counter_agent(self):
-        return Agent(config=self.agents_config["coutner_agent"])
+        # added custom tools
+        return Agent(config=self.agents_config["counter_agent"], tools=[count_letters])
 
     # 2. Create a Task
     # anything with @task decorator goes to self.tasks
@@ -43,6 +45,10 @@ class TranslatorCrew:
     def retranslate_task(self):
         return Task(config=self.tasks_config["retranslate_task"])
 
+    @task
+    def count_task(self):
+        return Task(config=self.tasks_config["count_task"])
+
     # 3. Create a Crew
     @crew
     def assemble_crew(self):
@@ -51,4 +57,6 @@ class TranslatorCrew:
         return Crew(agents=self.agents, tasks=self.tasks, verbose=True)
 
 
-TranslatorCrew().assemble_crew().kickoff(inputs={"sentence": "비가 많이 내려요."})
+TranslatorCrew().assemble_crew().kickoff(
+    inputs={"sentence": "I'm Kyle and I like to ride a bicycle in Napoli."}
+)
