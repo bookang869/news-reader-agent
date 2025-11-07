@@ -25,6 +25,10 @@ class TranslatorCrew:
             config=self.agents_config["translator_agent"]
         )
 
+    @agent
+    def counter_agent(self):
+        return Agent(config=self.agents_config["coutner_agent"])
+
     # 2. Create a Task
     # anything with @task decorator goes to self.tasks
     @task
@@ -47,6 +51,4 @@ class TranslatorCrew:
         return Crew(agents=self.agents, tasks=self.tasks, verbose=True)
 
 
-TranslatorCrew().assemble_crew().kickoff(
-    inputs={"sentence": "I'm Kyle and I like to ride my bicycle in Napoli"}
-)
+TranslatorCrew().assemble_crew().kickoff(inputs={"sentence": "비가 많이 내려요."})
