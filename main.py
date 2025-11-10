@@ -1,3 +1,4 @@
+# load environment variables from .env
 import dotenv
 
 dotenv.load_dotenv()
@@ -5,58 +6,57 @@ dotenv.load_dotenv()
 # Crew - a collaborative group of agents
 # Agent - an autonomous unit that performs tasks, makes decisions, accomplish objectives, etc... using AI
 # Task - a specific assignment completed by an Agent
+
 from crewai import Crew, Agent, Task
 from crewai.project import CrewBase, agent, task, crew
-from tools import count_letters
+from tools import search_tool, scrape_tool
 
 
-# Decorator 'CrewBase' allows CrewAI-specific decorators on methods: @agent, @task, @after_kickoff
 @CrewBase
-class TranslatorCrew:
-    # 1. Create an Agent
-    # anything with @agent decorator goes to self.agents
+class NewsReaderAgent:
+    # 1. Create agents
+
     @agent
-    def translator_agent(self):
-        # 3 mandatory attributes
-        # -> Role: an agent's function and expertise within the crew
-        # -> Goal: an individual objective that guides the agent's decision making
-        # -> Backstory: context and personality to the agent to enrich interactions
+    # The agent that discovers and collects most relevant, credible, up-to-date news articles
+    def news_hunter_agent(self):
         return Agent(
-            # assigns attributes according to 'translator_agent' in config/agents.yaml
-            config=self.agents_config["translator_agent"]
+            config=self.agents_config["news_hunter_agent"],
+            tools=[search_tool, scrape_tool],
         )
 
+    # The agent that transforms raw articles to cleaer, concise, and comprehensive summaries
     @agent
-    def counter_agent(self):
-        # added custom tools
-        return Agent(config=self.agents_config["counter_agent"], tools=[count_letters])
+    def summarizer_agent(self):
+        return Agent(config=self.agents_config["summarizer_agent"], tools=[scrape_tool])
 
-    # 2. Create a Task
-    # anything with @task decorator goes to self.tasks
-    @task
-    def translate_task(self):
-        # 2 mandatory attributes
-        # -> Description: a clear, concise statement of what the task entails
-        # -> Expected Output: a detailed description of what the task's completion look like
-        # -> Agent (OPTIONAL): the agent responsible for executing the task
-        return Task(config=self.tasks_config["translate_task"])
+    # The agent that curates news content into a cohesive, engaging narrative
+    @agent
+    def curator_agent(self):
+        return Agent(config=self.agents_config["curator_agent"])
+
+    # 2. Create tasks for the above agents
 
     @task
-    def retranslate_task(self):
-        return Task(config=self.tasks_config["retranslate_task"])
+    # The task for the 'news_hunter_agent'
+    def content_harvesting_task(self):
+        return Task(config=self.tasks_config["content_harvesting_task"])
 
+    # The task for the 'summarizer_agent'
     @task
-    def count_task(self):
-        return Task(config=self.tasks_config["count_task"])
+    def summarization_task(self):
+        return Task(config=self.tasks_config["summarization_task"])
 
-    # 3. Create a Crew
+    # The task for the 'curator_agent'
+    @task
+    def final_report_assembly_task(self):
+        return Task(config=self.tasks_config["final_report_assembly_task"])
+
+    # 3. Create a crew combining these agents and tasks
+
     @crew
-    def assemble_crew(self):
-        # Crew is a combination of agents and tasks
-        # verbose - print out agent's response
+    def crew(self):
         return Crew(agents=self.agents, tasks=self.tasks, verbose=True)
 
 
-TranslatorCrew().assemble_crew().kickoff(
-    inputs={"sentence": "I'm Kyle and I like to ride a bicycle in Napoli."}
-)
+# execute the crew
+NewsReaderAgent().crew().kickoff(inputs={"topic": "Cambodia Thailand War."})
