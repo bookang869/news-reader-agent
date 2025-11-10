@@ -91,7 +91,7 @@ uv run main.py
 - **OpenAI API Key**: Get from [OpenAI Platform](https://platform.openai.com/api-keys)
 - **Serper API Key**: Get from [Serper.dev](https://serper.dev/)
 
-## ⚙️ Configuration
+## Configuration
 
 ### Agents Configuration
 
